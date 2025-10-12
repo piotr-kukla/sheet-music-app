@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sheetmusic.fullname" . }}-config
+data:
+  JAVA_OPTS: "{{ .Values.sheetmusic.java_opts }}"
+  SMTP_ENABLED: "{{ .Values.sheetmusic.smtp.enabled }}"
+  SMTP_HOST: "{{ .Values.sheetmusic.smtp.host }}"
+  SMTP_PORT: "{{ .Values.sheetmusic.smtp.port }}"
+  SMTP_USERNAME: "{{ .Values.sheetmusic.smtp.username }}"
+  SMTP_SSL_CONNECTION: "{{ .Values.sheetmusic.smtp.ssl }}"
+  SMTP_VERIFY_SSL_CERTIFICATE: "{{ .Values.sheetmusic.smtp.ssl_ver }}"
+  SMTP_FROM: "{{ .Values.sheetmusic.smtp.from }}"
+  PASSWORD_RESET_LINK_PATTERN: "{{ .Values.sheetmusic.reset_password_url }}"
+  SQL_USERNAME: "{{ tpl .Values.sheetmusic.sql.username . }}"
+  SQL_DBNAME: "{{ tpl .Values.sheetmusic.sql.name . }}"
+  SQL_HOST: "{{ tpl .Values.sheetmusic.sql.host . }}"
+  SQL_PORT: "{{ tpl .Values.sheetmusic.sql.port . }}"
+  OTEL_SDK_DISABLED: "{{ not .Values.sheetmusic.otel.enabled }}"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "{{ .Values.sheetmusic.otel.endpoint }}"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "{{ .Values.sheetmusic.otel.protocol }}"
+  OTEL_SERVICE_NAME: "{{ .Values.sheetmusic.otel.service_name }}"
+  OTEL_METRIC_EXPORT_INTERVAL: "{{ .Values.sheetmusic.otel.metric_export_interval }}"
+  LOGBACK_JSON_ENCODE: "{{ .Values.sheetmusic.logback_json_encode }}"

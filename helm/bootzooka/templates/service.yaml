@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sheetmusic.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "sheetmusic.name" . }}
+    helm.sh/chart: {{ include "sheetmusic.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.sheetmusic.service.type }}
+  ports:
+    - port: {{ .Values.sheetmusic.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "sheetmusic.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

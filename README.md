@@ -1,0 +1,90 @@
+![Sheetmusic](https://github.com/softwaremill/sheetmusic/raw/master/banner.png)
+
+[![CI](https://github.com/softwaremill/sheetmusic/workflows/Sheetmusic%20CI/badge.svg)](https://github.com/softwaremill/sheetmusic/actions?query=workflow%3A%22Sheetmusic+CI%22)
+
+Sheetmusic is a scaffolding project to allow quick start of development of a microservice or a web application. If you'd
+like to have a jump start developing a Scala-based project, skipping the boring parts and focusing on the real business
+value, this template might be for you!
+
+You can start testing or developing Sheetmusic right away with the below setup, or proceed to the mor ecomplete
+[Sheetmusic documentation](http://softwaremill.github.io/sheetmusic/).
+
+# Run locally using Docker
+
+If you'd like to see the project in action, the fastest way is to use the provided Docker compose setup. It starts three
+images: Sheetmusic itself (either locally built or downloaded), PostgreSQL server and Graphana LGTM for observability.
+
+# Run locally for development
+
+If you'd like to modify some of Sheetmusic's parts, or develop your own application using the template, you'll need to
+start the backend & frontend in development modes separately.
+
+## Database
+
+First, you'll need a PostgreSQL database running. One of the options is to start one using Docker; here a `sheetmusic`
+database will be created:
+
+```sh
+# use "sheetmusic" as a password
+docker run --name sheetmusic-postgres -p 5432:5432 -e POSTGRES_PASSWORD=sheetmusic -e POSTGRES_DB=sheetmusic -d postgres
+```
+
+## Backend
+
+Then, you can start the backend. You'll need the JVM 21+ and [SBT](https://www.scala-sbt.org) installed:
+
+```sh
+SQL_PASSWORD=sheetmusic ./backend-start.sh
+```
+
+By default, OpenTelemetry is disabled to avoid telemetry export exceptions (which is available and explorable if you are
+using the Docker compose setup). If you have a collector running, edit the startp script appropriately.
+
+The backend will start on [`http://localhost:8080`](http://localhost:8080). You can explore the API docs using the
+Swagger UI by navigating to [`http://localhost:8080/api/v1/docs`](http://localhost:8080/api/v1/docs).
+
+When any source files change on the backend, it will be automatically restarted. Moreover, if there are new or changed
+endpoint definitions, the OpenAPI description will be regenerated, which is then used by the frontend to generate
+service stubs.
+
+## Frontend
+
+You will need the [yarn package manager](https://yarnpkg.com) to run the UI. Install it using your package manager or:
+
+```sh
+curl -o- -L https://yarnpkg.com/install.sh | bash
+```
+
+Create a `ui/.env` file, using the `ui/.env.example`. Unless you changed the port of the backend, the default value will
+be fine.
+
+Then, you can start the frontend:
+
+```sh
+./frontend-start.sh
+```
+
+And open `http://localhost:8081`. The frontend will automatically reload when there are any changes in the frontend
+source. The frontend connects to the backend on the 8080 port, as specified in the environment file.
+
+# Using the template
+
+If you'd like to use Sheetmusic as a template for your own project it might be useful to:
+
+1. Clone the repository without history using `git clone --depth 1`
+2. Switch the git's origin to the new repository: `git remote set-url origin https://repo.com/OTHERREPOSITORY.git`
+3. Rename the project and the package using e.g. `sbt "renameProject com.mycompany avocado"`
+
+# Project info
+
+[The docs](http://softwaremill.github.io/sheetmusic/) dive deeper into various aspects of the project (architecture, tech
+stack, development tips).
+
+## Commercial Support
+
+We offer commercial support for Sheetmusic and related technologies, as well as development services. [Contact
+us](https://softwaremill.com) to learn more about our offer!
+
+## Copyright
+
+Copyright (C) 2013-2025 SoftwareMill [https://softwaremill.com](https://softwaremill.com).

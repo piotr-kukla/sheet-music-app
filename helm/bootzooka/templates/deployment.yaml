@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sheetmusic.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "sheetmusic.name" . }}
+    helm.sh/chart: {{ include "sheetmusic.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.sheetmusic.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "sheetmusic.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "sheetmusic.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.sheetmusic.image.repository }}:{{ .Values.sheetmusic.image.tag }}"
+          imagePullPolicy: {{ .Values.sheetmusic.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "sheetmusic.fullname" . }}-config
+          - secretRef:
+              name: {{ include "sheetmusic.fullname" . }}-secret
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.sheetmusic.liveness_initial_delay }}
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            initialDelaySeconds: {{ .Values.sheetmusic.readiness_initial_delay }}
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
